@@ -5,6 +5,7 @@
     <form @submit.prevent="fetchVideo">
     <b-field label="Enter a YouTube URL">
         <b-input
+          placeholder="https://youtube.com/watch?v=dQw4w9WgXcQ"
           :loading="loading"
           size="is-large"
           v-model="url"
@@ -57,6 +58,7 @@ import Axios from 'axios'
 //import downloadjs from 'downloadjs'
 export default {
   name: 'App',
+  API_URL:null,
   RECM_QUALITY: ["144p","240p","360p","480p"],
   computed:{
     qualities() {
@@ -77,7 +79,7 @@ export default {
   },
   data() {
     return {
-      url:"https://www.youtube.com/watch?v=ri_0v9rHB_Q",
+      url:null,
       video:{
         id:null,
         title:null,
@@ -92,6 +94,13 @@ export default {
   },
   components: {
   },
+  created() {
+    if(this.$useHost) {
+      this.$options.API_URL = window.location.hostname;
+    }else{
+      this.$options.API_URL = this.$apiURL
+    }
+  },
   mounted() {
     this.$options.REGEX = new RegExp(this.$regex)
     //todo: check # anchor
@@ -102,10 +111,10 @@ export default {
       this.quality = this.qualities.slice().reverse().find(v => this.$options.RECM_QUALITY.includes(v.quality)).id
     },
     downloadVideo() {
-      location.href = `${this.$apiURL}/download/video/${this.video.id}?quality=${this.quality}`
+      location.href = `${this.$options.API_URL}/download/video/${this.video.id}?quality=${this.quality}`
     },
     downloadAudio() {
-      location.href = `${this.$apiURL}/download/audio/${this.video.id}`
+      location.href = `${this.$options.API_URL}/download/audio/${this.video.id}`
     },
     fetchVideo() {
       this.loading = true;
@@ -119,7 +128,7 @@ export default {
         })
         return;
       }
-      Axios.get(`${this.$apiURL}/fetch/${encodeURIComponent(this.url)}`)
+      Axios.get(`${this.$options.API_URL}/fetch/${encodeURIComponent(this.url)}`)
       .then(({data,headers}) => {
         this.video = data;
         console.log(headers)
