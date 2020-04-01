@@ -1,0 +1,4 @@
+move routes out of index.js
+cleanup index 
+add cleanup system for videos/ folder 
+possibly not proxy ytdl, and instead send direct link
