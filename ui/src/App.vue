@@ -104,7 +104,22 @@ export default {
   mounted() {
     this.$options.REGEX = new RegExp(this.$regex)
     console.debug('API_URL =',this.$options.API_URL)
-    //todo: check # anchor
+
+    const hash = window.location.hash.substr(1);
+    if(!hash || hash == "") {
+      window.location.hash = "#"
+    }else{
+      console.debug('Fetching video from anchor',hash)
+      this.url = hash;
+      this.fetchVideo();
+    }
+    window.addEventListener('hashchange',() => {
+      const hash = window.location.hash.substr(1);
+      if(hash != "" && hash !== this.url) {
+        this.url = hash;
+        this.fetchVideo();
+      }
+    })
   },
   methods:{
     findNiceQuality() {
@@ -119,6 +134,7 @@ export default {
     },
     fetchVideo() {
       this.loading = true;
+      window.location.hash = '#' + this.url
       if(!this.$options.REGEX.test(this.url)) {
         this.$buefy.dialog.alert({
             title: 'Invalid URL',
