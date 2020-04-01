@@ -96,7 +96,7 @@ export default {
   },
   created() {
     if(this.$useHost) {
-      this.$options.API_URL = window.location.hostname;
+      this.$options.API_URL = '';
     }else{
       this.$options.API_URL = this.$apiURL
     }
