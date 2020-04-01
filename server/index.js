@@ -114,7 +114,7 @@ app.get('/download/audio/:id',downloadLimiter,rateLimit({
         console.log(req.params.id)
         const video = ytdl(
             `https://youtu.be/${req.params.id}`,
-            ["-f bestaudio --add-metadata  --no-playlist"]
+            ["-f bestaudio"]
         )
         video.on('end', () => res.end());
         video.pipe(res)
