@@ -103,6 +103,7 @@ export default {
   },
   mounted() {
     this.$options.REGEX = new RegExp(this.$regex)
+    console.debug('API_URL =',this.$options.API_URL)
     //todo: check # anchor
   },
   methods:{
