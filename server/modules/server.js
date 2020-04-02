@@ -6,7 +6,7 @@ const fs = require('fs').promises
 const {VIDEO_INFO_CACHE,VIDEO_HITS,VERSION} = require('./constants')
 
 app.listen(process.env.WEB_PORT||8080,() => {
-    console.info('[Listening on :' + (process.env.WEB_PORT||8080))
+    console.info('[Server] Listening on :' + (process.env.WEB_PORT||8080))
 })
 app.use(cors({
     origin:process.env.CORS_ORIGIN,
