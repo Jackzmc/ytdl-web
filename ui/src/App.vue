@@ -133,7 +133,7 @@ export default {
       location.href = `${this.$options.API_URL}/download/audio/${this.video.id}`
     },
     fetchVideo() {
-      this.loading = true;
+      
       window.location.hash = '#' + this.url
       if(!this.$options.REGEX.test(this.url)) {
         this.$buefy.dialog.alert({
@@ -145,6 +145,7 @@ export default {
         })
         return;
       }
+      this.loading = true;
       Axios.get(`${this.$options.API_URL}/fetch/${encodeURIComponent(this.url)}`)
       .then(({data,headers}) => {
         this.video = data;
