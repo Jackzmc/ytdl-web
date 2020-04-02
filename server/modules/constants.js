@@ -6,6 +6,7 @@ module.exports = {
     VIDEO_PATH: path.join(__dirname,"../videos"),
     VIDEO_INFO_CACHE:  new Map(),
     VIDEO_HITS:  new Map(),
+    OPEN_DOWNLOADS: new Map(),
     BANNED_IP_LIST: process.env.BANNED_IPS.split(","),
     VERSION
 }
