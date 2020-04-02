@@ -34,7 +34,7 @@
       <p class="subtitle is-6">Uploaded by <b>{{video.uploader}}</b></p>
       </span>
       <br><br>
-      <div class="container" style="width:50%">
+      <div class="container" style="width:50%;left:95px">
         <b-field label="Quality">
             <b-select v-model="quality" size="is-large" expanded="">
                 <option
@@ -49,13 +49,16 @@
           <b-button @click="downloadVideo" type="is-primary is-large">Download MP4</b-button>
           <b-button @click="downloadAudio" type="is-primary is-large">Download Audio</b-button>
         </div>
-        <p>Notice: HD Video Downloads may be throttled or limited. Non-HD (480p and less) and audio downloads will not be limited.</p>
+        <p>Notice: HD Video Downloads may be throttled or limited. Non-HD (480p and less) and audio downloads will not be as limited.</p>
       </div>
       
     </div>
     <footer class="ytdl-footer" v-if="video.id">
       youtube-dl version {{ytdl_version}} - Build Date {{buildDate}} - v{{$version}} UI - v{{server_version}} Server
     </footer>
+    <div class="github-banner">
+      <a href="https://github.com/jackzmc/ytdl-web"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    </div>
   </div>
 </template>
 
@@ -200,5 +203,10 @@ export default {
   text-decoration: none;
   box-shadow: inset 0 1px 1px #999, inset 0 2px 2px #fff, inset 0 -5px 30px -15px #666;
   
+}
+.github-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 </style>
