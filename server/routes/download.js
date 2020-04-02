@@ -4,7 +4,8 @@ const rateLimit = require("express-rate-limit");
 const {execShellCmd} = require('../modules/util')
 const path = require('path')
 const ytdl = require('youtube-dl')
-const {VIDEO_PATH,VIDEO_HITS} = require('../modules/constants')
+    
+const {VIDEO_PATH,VIDEO_HIT,OPEN_DOWNLOADS} = require('../modules/constants')
 const {stat} = require('fs').promises
 module.exports = router;
 
@@ -14,7 +15,11 @@ const downloadLimiter = slowDown({
     delayAfter: 2, // allow 100 requests per 15 minutes, then...
     delayMs: 500 // begin adding 500ms of delay per request above 100:
 });
-
+router.use((req,res,next) => {
+    //ban check
+    if(BANNED_IP_LIST.includes(req.ip)) return res.status(403).send('403 Forbidden')
+    next();
+})
 router.get('/audio/:id',downloadLimiter,rateLimit({
     windowMs: 1000 * 60 * 10,
     max: 20
@@ -58,7 +63,10 @@ router.get('/video/:id',downloadLimiter,rateLimit({
                 console.log('[download/video]',stderr)
                 res.status(500).send('Failed to download video.<br>' + err.message + "<br>" + stderr)
             }else{
+                //set download timer to now to prevent video from being deleted too early
+                OPEN_DOWNLOADS.set(req.params.id,Date.now())
                 incrementHits(req.params.id)
+
                 res.header('X-Cache-Status','MISS')
                 res.download(FILE_PATH)
             }

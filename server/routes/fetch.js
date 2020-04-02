@@ -2,8 +2,13 @@ const router = require('express').Router();
 const rateLimit = require("express-rate-limit");
 const ytdl = require('youtube-dl')
 const ytdlCore = require('ytdl-core')
-const {REGEX,VIDEO_INFO_CACHE} = require('../modules/constants')
+const {REGEX,VIDEO_INFO_CACHE,BANNED_IP_LIST} = require('../modules/constants')
 module.exports = router;
+router.use((req,res,next) => {
+    //ban check
+    if(BANNED_IP_LIST.includes(req.ip)) return res.status(403).send({error:'403 Forbidden'})
+    next();
+})
 router.get('/:url',rateLimit({
     windowMs:1000 * 60 * 1,
     max:10,
