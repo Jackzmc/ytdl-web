@@ -1,7 +1,13 @@
 <template>
   <div id="app" class="container">
     <span class="has-text-centered">
-    <h1 class="title is-1">Youtube Video Downloader</h1>
+    <p class="title is-1">Youtube Video Downloader</p>
+    <div class="has-text-centered">
+    <b-tooltip label="Drag to bookmark bar to quickly download videos" >
+      <a class="subtitle is-4 bookmarklet" href="(function(){s=document.createElement('script');s.type='text/javascript';s.src='https://ytdl.jackz.me/js/bookmarket.js?v='+parseInt(Math.random()*999);document.body.appendChild(s);})();">Bookmarklet</a>
+    </b-tooltip>
+    </div>
+    <br>
     <form @submit.prevent="fetchVideo">
     <b-field label="Enter a YouTube URL">
         <b-input
@@ -183,5 +189,16 @@ export default {
   bottom: 0;
   width: 100%;
   text-align: center;
+}
+.bookmarklet {
+  border-radius: 3px;
+  border: none;
+  margin: 5px;
+  width: 100%;
+  display: inline-block;
+  padding: 2px 15px;
+  text-decoration: none;
+  box-shadow: inset 0 1px 1px #999, inset 0 2px 2px #fff, inset 0 -5px 30px -15px #666;
+  
 }
 </style>
