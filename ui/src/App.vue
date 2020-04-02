@@ -4,7 +4,7 @@
     <p class="title is-1">Youtube Video Downloader</p>
     <div class="has-text-centered">
     <b-tooltip label="Drag to bookmark bar to quickly download videos" >
-      <a class="subtitle is-4 bookmarklet" href="(function(){s=document.createElement('script');s.type='text/javascript';s.src='https://ytdl.jackz.me/js/bookmarket.js?v='+parseInt(Math.random()*999);document.body.appendChild(s);})();">Bookmarklet</a>
+      <a class="subtitle is-4 bookmarklet" href="javascript:(function(){s=document.createElement('script');s.type='text/javascript';s.src='https://ytdl.jackz.me/js/bookmarket.js?v='+parseInt(Math.random()*999);document.body.appendChild(s);})();">Bookmarklet</a>
     </b-tooltip>
     </div>
     <br>
