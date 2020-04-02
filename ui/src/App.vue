@@ -34,7 +34,7 @@
       <p class="subtitle is-6">Uploaded by <b>{{video.uploader}}</b></p>
       </span>
       <br><br>
-      <div class="container" style="width:50%;left:95px">
+      <div class="container" style="width:50%;left:80px">
         <b-field label="Quality">
             <b-select v-model="quality" size="is-large" expanded="">
                 <option
