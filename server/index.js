@@ -4,4 +4,4 @@ require('fs').promises.mkdir('videos').catch(() => {})
 
 //load core: server, cleanup
 require('./modules/server.js')
-//require('./modules/cleanup.js')
+if(!process.env.DISABLE_CLEANUP) require('./modules/cleanup.js')

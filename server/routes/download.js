@@ -6,7 +6,7 @@ const path = require('path')
 const ytdl = require('youtube-dl')
     
 const {VIDEO_PATH,VIDEO_HIT,OPEN_DOWNLOADS} = require('../modules/constants')
-const {stat} = require('fs').promises
+const {access} = require('fs').promises
 module.exports = router;
 
 const YTDL_PATH = ytdl.getYtdlBinary()
@@ -46,7 +46,7 @@ router.get('/video/:id',downloadLimiter,rateLimit({
     const FILE_NAME = `${req.params.id}-${quality}.mp4`; 
     const FILE_PATH = path.join(VIDEO_PATH,FILE_NAME);
     if(!quality) return res.status(400).send('Invalid request.')
-    stat(FILE_PATH)
+    access(FILE_PATH)
     .then(r => {
         res.header('X-Cache-Status','HIT')
         incrementHits(req.params.id)
