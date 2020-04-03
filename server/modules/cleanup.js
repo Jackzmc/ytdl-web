@@ -2,21 +2,25 @@ const INTERVAL = parseInt(process.env.CLEANUP_INTERVAL_MS) ||1000 * 60 * 60 * 5 
 //amount of time since first downloaded until expires
 const EXPIRE_TIME = parseInt(process.env.CLEANUP_EXPIRE_MS) || 1000 * 60 * 60 //defaults to 1hr
 //maximum amount of videos to store (maybe capacity later)
-const MAX_FILES = parseInt(process.env.CLEANUP_MAX_VIDEOS) || 100;
+const MAX_FILES = parseInt(process.env.CLEANUP_MIN_THRESHOLD) || 100;
+
+const PURGE_ENABLED = !!process.env.PURGE_ENABLED //check if purge enabled
+const PURGE_AGE_THRESHOLD = parseInt(process.env.CLEANUP_PURGE_OLDER_MS) || 6.048e+8; //defaults to 1 week
+const PURGE_HITS_THRESHOLD = parseInt(process.env.CLEANUP_PURGE_LESS_THAN_HITS) || 100;
 
 const { VIDEO_HITS, OPEN_DOWNLOADS, VIDEO_PATH } = require('./constants')
 const path = require('path')
 const fs = require('fs').promises
 function cleanupLoop() {
     const highestHit = Math.max(...VIDEO_HITS.values())
-    const pending = [];
+    const pending = []; //into large array, splice only x amount
 
     purgeOpenDownloads(); //remove any downloads that have expired
 
     fs.readdir(VIDEO_PATH)
     .then(entries => {
         //skip cleanup if not hit threshold
-        if(entries.length <= MAX_FILES) return;
+        const thresholdHit = entries.length >= MAX_FILES
 
         console.info('[Cleanup] Cleaning up ' + entries.length)
         entries.forEach(async filename => {
@@ -29,11 +33,15 @@ function cleanupLoop() {
                 if(ext === "mp4" && !OPEN_DOWNLOADS.has(id)) {
                     const hits = VIDEO_HITS.get(id) || 0;
                     //If file is older than a day
-                    if(Date.now() - stat.birthtimeMs >= 8.64e+7) {
+                    if(thresholdHit) {
                         pending.push({
                             path: _path,
                             hits
                         })
+                    }else if(PURGE_ENABLED && Date.now() - stat.birthtimeMs >= PURGE_AGE_THRESHOLD) {
+                        if(hits <= PURGE_HITS_THRESHOLD) {
+                            await fs.delete(_path);
+                        }
                     }
                 }
             }
