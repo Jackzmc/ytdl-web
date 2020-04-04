@@ -57,7 +57,7 @@
       youtube-dl version {{ytdl_version}} - Build Date {{buildDate}} - v{{$version}} UI - v{{server_version}} Server
     </footer>
     <div class="github-banner">
-      <a href="https://github.com/jackzmc/ytdl-web"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+      <a href="https://github.com/jackzmc/ytdl-web"><img width="149" height="149" src="@/assets/forkme_github.png" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
     </div>
   </div>
 </template>
