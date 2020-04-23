@@ -25,16 +25,23 @@
     </span>
     <hr>
     <b-loading :active="loading" />
-    <div v-if="video.id">
+
+    <div>
       <figure class="image is-128x128 is-inline-block is-pulled-left">
-        <img :src="video.thumbnail_url" />
+        <b-skeleton v-if="showSkeleton" width="128px" height="128px"></b-skeleton>
+        <img v-else :src="video.thumbnail_url" />
       </figure>
-      <span class="is-inline has-text-centered">
-      <p class="title is-4">{{video.title}}</p>
-      <p class="subtitle is-6">Uploaded by <b>{{video.uploader}}</b></p>
+      <span v-if="showSkeleton"  class="is-inline has-text-centered">
+        <b-skeleton width="60%"></b-skeleton>
+        <b-skeleton width="50%"></b-skeleton>
       </span>
+      <span v-else-if="video.id" class="is-inline has-text-centered">
+        <p class="title is-4">{{video.title}}</p>
+        <p class="subtitle is-6">Uploaded by <b>{{video.uploader}}</b></p>
+      </span>
+      
       <br><br>
-      <div class="container" style="width:50%;left:80px">
+      <div v-if="video.id" class="container" style="width:50%;left:80px">
         <b-field label="Quality">
             <b-select v-model="quality" size="is-large" expanded="">
                 <option
@@ -84,6 +91,10 @@ export default {
     },
     buildDate() {
       return document.documentElement.dataset.buildTimestampUtc;
+    },
+    showSkeleton() {
+      console.debug('loading: ',this.loading,'video:',!!this.video.id,'final',this.loading && !this.video.id)
+      return this.loading && !this.video.id
     }
   },
   data() {
@@ -158,7 +169,6 @@ export default {
       Axios.get(`${this.$options.API_URL}/fetch/${encodeURIComponent(this.url)}`)
       .then(({data,headers}) => {
         this.video = data;
-        console.log(headers)
         this.ytdl_version = headers['x-ytdl-version']
         this.server_version = headers['x-server-version'];
         this.findNiceQuality();
