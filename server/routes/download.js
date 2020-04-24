@@ -5,7 +5,7 @@ const {execShellCmd} = require('../modules/util')
 const path = require('path')
 const ytdl = require('youtube-dl')
     
-const {VIDEO_PATH,VIDEO_HIT,OPEN_DOWNLOADS} = require('../modules/constants')
+const {VIDEO_PATH,VIDEO_HITS,OPEN_DOWNLOADS,BANNED_IP_LIST} = require('../modules/constants')
 const {access} = require('fs').promises
 module.exports = router;
 
@@ -25,9 +25,11 @@ router.get('/audio/:id',downloadLimiter,rateLimit({
     max: 20
 }),(req,res) => {
     try {
+        res.type('audio/mp4')
+        res.setHeader('Content-disposition', `attachment; filename=${req.params.id}.m4a`);
         const video = ytdl(
             `https://youtu.be/${req.params.id}`,
-            ["-f bestaudio"]
+            ["-f bestaudio[ext=m4a]"]
         )
         video.on('end', () => res.end());
         video.pipe(res)
