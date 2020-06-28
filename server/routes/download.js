@@ -55,9 +55,8 @@ router.get('/video/:id',downloadLimiter,rateLimit({
         return res.download(FILE_PATH)
     })
     .catch(err => {
-        console.debug('not exist')
         execShellCmd(
-            `${YTDL_PATH} ${req.params.id} -f ${quality}+bestaudio[ext=m4a] --merge-output-format mp4 --ffmpeg-location \"${process.env.FFMPEG_LOCATION}\" --output \"${FILE_NAME}\" --add-metadata --embed-thumbnail --no-playlist`,
+            `${YTDL_PATH} ${req.params.id} -f ${quality}[vcodec!*=av01]+bestaudio[ext=m4a] --merge-output-format mp4 --ffmpeg-location \"${process.env.FFMPEG_LOCATION}\" --output \"${FILE_NAME}\" --add-metadata --embed-thumbnail --no-playlist`,
             {cwd:VIDEO_PATH}
         )
         .then(({stdout,stderr}) => {

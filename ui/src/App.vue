@@ -48,7 +48,9 @@
                     v-for="(option) in qualities"
                     :value="option.id"
                     :key="option.id">
-                    {{ option.quality }} <span v-if="!$options.RECM_QUALITY.includes(option.quality)">[HD]</span>
+                    <span>[{{ option.id }}] </span>
+                    <span>{{ option.quality }}</span>
+                    <span v-if="!$options.RECM_QUALITY.includes(option.quality)"> [HD]</span>
                 </option>
             </b-select>
         </b-field>
@@ -80,20 +82,22 @@ export default {
     qualities() {
       const qualities = [];
       const filtered = [];
-      this.video.formats.filter(v => v.ext === 'mp4')
-      .forEach(({quality,id}) => {
+      this.video.formats.filter(v => (v.ext === 'mp4' || v.ext === 'webm') && !v.vcodec.startsWith("av01") && v.quality !== "DASH audio")
+      .forEach(({quality, id, width}) => {
+        if(quality === "DASH video") {
+          quality = `${width}p`
+        }
         if(!qualities.includes(quality)) {
           qualities.push(quality)
           filtered.push({quality,id})
         }
       })
-      return filtered.sort((a,b) => parseInt(a) - parseInt(b))
+      return filtered.sort((a,b) => parseInt(a.quality) - parseInt(b.quality))
     },
     buildDate() {
       return document.documentElement.dataset.buildTimestampUtc;
     },
     showSkeleton() {
-      console.debug('loading: ',this.loading,'video:',!!this.video.id,'final',this.loading && !this.video.id)
       return this.loading && !this.video.id
     }
   },
@@ -144,7 +148,8 @@ export default {
   methods:{
     findNiceQuality() {
       //loops this.qualities, finds first good non-HD (720p+) video
-      this.quality = this.qualities.slice().reverse().find(v => this.$options.RECM_QUALITY.includes(v.quality)).id
+      const video = this.qualities.slice().reverse().find(v => this.$options.RECM_QUALITY.includes(v.quality));
+      return video ? video.id : this.qualities.length == 1 ? this.qualities[0] : null
     },
     downloadVideo() {
       location.href = `${this.$options.API_URL}/download/video/${this.video.id}?quality=${this.quality}`

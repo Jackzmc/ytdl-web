@@ -43,12 +43,14 @@ router.get('/:url',rateLimit({
                                 return {
                                     id:v.format_id,
                                     ext:v.ext,
-                                    quality:v.format_note
+                                    quality:v.format_note,
+                                    vcodec: v.vcodec,
+                                    width: v.width
                                 }
                             }),
                             raw:SHOW_RAW ? info : undefined
                         }
-                        VIDEO_INFO_CACHE.set(info.id,data);
+                        if(!SHOW_RAW) VIDEO_INFO_CACHE.set(info.id,data);
                         return res.json(data)
                     }
                 })
